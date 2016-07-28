@@ -5,16 +5,23 @@ import { Provider } from 'react-redux';
 import { createStore } from 'redux';
 import todoApp from './reducers';
 import App from './components/App';
+import throttle from 'lodash/throttle';
+import { loadState, saveState } from './localStorage';
 
-const persistedState = {
-  todos: [{
-    id: '0',
-    text: 'Welcome back!',
-    completed: false,
-  }],
-};
-const store = createStore(todoApp, persistedState);
+const persistedState = loadState();
+const store = createStore(
+  todoApp,
+  persistedState
+);
+
 console.log(store.getState());
+
+store.subscribe(throttle(() => {
+  saveState({
+    todos: store.getState().todos,
+  });
+}, 1000));
+
 
 render(
   <Provider store={store}>

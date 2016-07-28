@@ -38,6 +38,8 @@
     "eslint-plugin-jsx-a11y": "^1.0.4",
     "eslint-plugin-react": "^5.0.1",
     "express": "^4.13.3",
+    "lodash": "^4.14.0",
+    "node-uuid": "^1.4.7",
     "webpack": "^1.9.11",
     "webpack-dev-middleware": "^1.2.0"
   }
