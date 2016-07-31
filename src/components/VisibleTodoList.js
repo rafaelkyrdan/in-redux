@@ -1,39 +1,45 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { toggleTodo } from '../actions';
+import * as actions from '../actions';
 import { getVisibleTodos } from '../reducers';
 import TodoList from './TodoList';
-import { fetchTodos } from '../api';
 
 class VisibleTodoList extends Component {
   componentDidMount() {
-    fetchTodos(this.props.filter).then(todos =>
-      console.log(this.props.filter, todos) // eslint-disable-line no-console
-    );
+    this.fetchData();
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.filter !== prevProps.filter) {
-      fetchTodos(this.props.filter).then(todos =>
-        console.log(this.props.filter, todos) // eslint-disable-line no-console
-      );
+      this.fetchData();
     }
   }
 
+  fetchData() {
+    const { filter, fetchTodos } = this.props;
+    fetchTodos(filter);
+  }
+
   render() {
-    return <TodoList {...this.props} />;
+    const { toggleTodo, ...rest } = this.props;
+    return (
+      <TodoList
+        {...rest}
+        onTodoClick={toggleTodo}
+      />
+    );
   }
 }
 
 VisibleTodoList.propTypes = {
   filter: PropTypes.oneOf(['all', 'active', 'completed']).isRequired,
-  receiveTodos: PropTypes.func.isRequired,
+  fetchTodos: PropTypes.func.isRequired,
   toggleTodo: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state, { params }) => {
-  const filter = params ? params.filter : 'all';
+  const filter = (params && params.filter) ? params.filter : 'all';
   return {
     todos: getVisibleTodos(state, filter),
     filter,
@@ -42,7 +48,7 @@ const mapStateToProps = (state, { params }) => {
 
 VisibleTodoList = withRouter(connect(
   mapStateToProps,
-  { onTodoClick: toggleTodo }
+  actions
 )(VisibleTodoList));
 
 export default VisibleTodoList;
