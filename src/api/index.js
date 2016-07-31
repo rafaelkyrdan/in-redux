@@ -7,11 +7,11 @@ const fakeDatabase = {
   todos: [{
     id: v4(),
     text: 'hey',
-    completed: true,
+    completed: false,
   }, {
     id: v4(),
     text: 'ho',
-    completed: true,
+    completed: false,
   }, {
     id: v4(),
     text: 'let’s go',
